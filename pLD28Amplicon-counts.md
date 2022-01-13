@@ -107,4 +107,4 @@ perl MultiCodes_8.pl -out A_idx5barcodes -index idx5 -preseq GCTAgataactaataggtg
 ```
 perl MultiCodes_8.pl -out B_barcodes -primers index.txt -preseq GAGGTCTCT -postseq CGT -nPreExpected 21:23 < Bamplicon_R12.fastq
 
-GAGGTCTCT
+Not enough coverage of indexing primers - need to redesign indexed amplicon primers and send for sequencing again
