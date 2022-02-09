@@ -34,7 +34,7 @@ include the field 'type' with type=1 for protein-coding genes.
 /home/barcode_ratios/g
 - creates a folder titled based on -name for outputting genome information
 ```bash
- perl SetupOrg.pl -gff GCF_000005845.2_ASM584v2_genomic.gff -fna GCF_000005845.2_ASM584v2_genomic.fna -name Keio
+perl SetupOrg.pl -gff GCF_000005845.2_ASM584v2_genomic.gff -fna GCF_000005845.2_ASM584v2_genomic.fna -name Keio
 ```
 For previous script had some issues with symbol errors think due to different versions of perl and bioperl communicating
 - To see what versions of a module are loaded run
@@ -46,4 +46,15 @@ worked with perl/5.28.1 and bioperl/5.16.1
 - if extra modules are loaded remove them using
 ```bash
 module rm program/VERSIONINFO
+```
+Removed line for invoking PoolStats.R from DesignRandomPool.pl because communicating between perl MSI and me is dumb 
+
+```bash
+perl DesignRandomPool.pl -pool Keio_pool -genes g/Keio/genes.tab Keio_test
+```
+
+Pulled # of reads mapped from DesignRandomPool.pl output and ran R script independently
+```bash
+module load R
+Rscript PoolStats.R Keio_pool g/Keio/genes.tab 3213323
 ```
