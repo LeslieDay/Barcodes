@@ -16,7 +16,9 @@ module load blat
 perl MapTnSeq.pl -genome GCF_000005845.2_ASM584v2_genomic.fna -model model_file -first Keio_ML9_index10_TAGCTT_L002_R1_001.fastq > Keio_test
  ```
  module_file is a single line file containing an example of what the tn/barcode insertion should look like
- eg. nnnnnnCTAAGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACAGATGTGTATAAGAGACAG
+ Keio practice eg. nnnnnnCTAAGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACAGATGTGTATAAGAGACAG
+ My samples actual- nnnnnnGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACGTGTCAGACCGGGGACTTATCAGCCAACCTGTT
+ Sequence following inverted repeat on plasmid- ATATCCATCACACTGGGCCGCTCGAGCATGC
  - The lower case n's indicate index that can be variable
  - Can add a second line for sequence that follows inverted repeat on plasmid to look for to filter out any sequences that had plasmid carry over past the IR 
  - outputs a file with barcode and location of insertion info 
