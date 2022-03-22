@@ -60,3 +60,121 @@ Pulled # of reads mapped from DesignRandomPool.pl output and ran R script indepe
 module load R
 Rscript PoolStats.R Keio_pool g/Keio/genes.tab 3213323
 ```
+
+Running these scripts on M Maripaludis sequencing data - S2 first
+```bash
+srun -N 1 --ntasks-per-node=4 --mem-per-cpu=12gb -t 4:00:00 -p interactive --pty bash
+module load blat 
+module load bioperl/5.16.1
+perl MapTnSeq.pl -genome S2_GCF_000011585.1_ASM1158v1_genomic.fna -model model_file -first S2_S1_R1_001.fastq.gz > S2_mapping
+```
+output\
+Parsed model model_file\
+Barcodes of length 20, expected transposon region of 95\
+Reads (gzipped) from S2_S1_R1_001.fastq.gz\
+Read 5296936 reads\
+Reads processed 5296936 Long-enough 5296936 Barcodes found 3320983\
+Mapping attempted for 3207633 Mapped 2916841 Uniquely 2904674\
+Hits past end of transposon: 135352 plus 20 weak/ambiguous; trumped hit to genome 16 times\
+Proportions: Long-enough 1.000 Barcode 0.627 Attempted 0.606 Mapped 0.551 Past-end 0.026
+
+[model_file.txt](https://github.com/LeslieDay/Barcodes/files/8318817/model_file.txt)
+
+[MapTnSeq.pl script source](https://bitbucket.org/berkeleylab/feba/src/master/bin/MapTnSeq.pl)
+
+[S2 Genome files](https://www.ncbi.nlm.nih.gov/datasets/genomes/?taxon=267377&utm_source=data-hub)
+```
+perl SetupOrg.pl -gff S2_GCF000011585.1genomic.gff -fna S2_GCF_000011585.1_ASM1158v1_genomic.fna -name S2_GeneTable
+```
+output
+
+Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.\
+Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Perl.pm line 627.\
+Warning: stop codon within MMP_RS00795\
+Warning: stop codon within MMP_RS02705\
+Warning: stop codon within MMP_RS04695\
+Warning: mstop codon within MMP_RS06685\
+Warning: stop codon within MMP_RS07120\
+Warning: stop codon within MMP_RS08715\
+Warning: stop codon within MMP_RS09070\
+Warning: stop codon within MMP_RS08735\
+Warning: stop codon within MMP_RS08740\
+
+```bash
+module load perl/modules.centos7.5.26.1
+
+perl DesignRandomPool.pl -pool S2_RandomPool -genes g/S2_GeneTable/genes.tab S2_mapping
+
+#if script won't run because cant find DBI then run following line
+perl -MCPAN -e 'install DBI'
+```
+DesignRandomPool.pl output
+
+Reading mapping files:\
+S2_mapping\
+S2_mapping has 3,052,193 mappings, 99,909 barcodes, 49,736 non-unique barcodes\
+Read 3041567 mapped reads for 94028 distinct barcodes\
+(Skipped 10626 reads with qBeg > 3)\
+40130 barcodes seen 10 or more times, map 38179 (minFrac 0.75 minRatio 8)\
+FewGood	150	0.0037\
+LoRatio	488	0.0122\
+NoCons	1195	0.0298\
+PastEnd	118	0.0029\
+Usable	38179	0.9514\
+Masked 6 off-by-1 barcodes (69 reads) leaving 38173 barcodes\
+Reads for those barcodes: 2602847 of 3041567 (85.6%)\
+Chao2 estimate of #barcodes present (may be inflated for sequencing error): 594490
+
+
+Analysis for JJ 
+perl MapTnSeq.pl -genome JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -model model_file -first JJ_S2_R1_001.fastq.gz > JJ_mapping
+
+Must have only bioperl/5.16.1 and perl/5.28.1 installed for this step to work so may have to uninstall and reinstall perl/modules.centos7.5.26.1
+perl SetupOrg.pl -gff JJ_gff_GCA_002945325.1_ASM294532v1_genomic.gff -fna JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -name JJ_GeneTable
+
+SetupOrg.pl for JJ output
+
+Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.
+Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Perl.pm line 627.
+Warning: stop codon within MMJJ_00870
+Warning: stop codon within MMJJ_08070
+Warning: stop codon within MMJJ_09470
+Warning: stop codon within MMJJ_11320
+Warning: stop codon within MMJJ_11330
+Warning: stop codon within MMJJ_11360
+Warning: stop codon within MMJJ_11380
+Warning: stop codon within MMJJ_14570
+Warning: stop codon within MMJJ_15440
+
+
+perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
+
+output
+
+Parsed model model_file\
+Barcodes of length 20, expected transposon region of 95\
+Reads (gzipped) from JJ_S2_R1_001.fastq.gz\
+Read 5924086 reads\
+Reads processed 5924086 Long-enough 5924086 Barcodes found 4910193\
+Mapping attempted for 4674817 Mapped 4283950 Uniquely 4222641\
+Hits past end of transposon: 8426 plus 0 weak/ambiguous; trumped hit to genome 0 times\
+Proportions: Long-enough 1.000 Barcode 0.829 Attempted 0.789 Mapped 0.723 Past-end 0.001
+
+module load perl/modules.centos7.5.26.1
+perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
+
+output 
+Reading mapping files:\
+JJ_mapping\
+JJ_mapping has 4,292,376 mappings, 202,668 barcodes, 121,633 non-unique barcodes\
+Read 4277927 mapped reads for 197929 distinct barcodes\
+(Skipped 14449 reads with qBeg > 3)\
+94143 barcodes seen 10 or more times, map 81382 (minFrac 0.75 minRatio 8)\
+FewGood	1146	0.0122\
+LoRatio	3324	0.0353\
+NoCons	8283	0.0880\
+PastEnd	8	0.0001\
+Usable	81382	0.8645\
+Masked 18 off-by-1 barcodes (221 reads) leaving 81364 barcodes\
+Reads for those barcodes: 3218100 of 4277927 (75.2%)\
+Chao2 estimate of #barcodes present (may be inflated for sequencing error): 779112
