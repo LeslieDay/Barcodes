@@ -60,17 +60,15 @@ Pulled # of reads mapped from DesignRandomPool.pl output and ran R script indepe
 module load R
 Rscript PoolStats.R Keio_pool g/Keio/genes.tab 3213323
 ```
-
 Running these scripts on M Maripaludis sequencing data - S2 first
-
 ```bash
 srun -N 1 --ntasks-per-node=4 --mem-per-cpu=12gb -t 4:00:00 -p interactive --pty bash
 module load blat 
 module load bioperl/5.16.1
 perl MapTnSeq.pl -genome S2_GCF_000011585.1_ASM1158v1_genomic.fna -model model_file -first S2_S1_R1_001.fastq.gz > S2_mapping
 ```
-output\
-Parsed model model_file\
+### Output
+>Parsed model model_file\
 Barcodes of length 20, expected transposon region of 95\
 Reads (gzipped) from S2_S1_R1_001.fastq.gz\
 Read 5296936 reads\
@@ -87,9 +85,8 @@ Proportions: Long-enough 1.000 Barcode 0.627 Attempted 0.606 Mapped 0.551 Past-e
 ```
 perl SetupOrg.pl -gff S2_GCF000011585.1genomic.gff -fna S2_GCF_000011585.1_ASM1158v1_genomic.fna -name S2_GeneTable
 ```
-output
-
-Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.\
+### Output
+>Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.\
 Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Perl.pm line 627.\
 Warning: stop codon within MMP_RS00795\
 Warning: stop codon within MMP_RS02705\
@@ -99,7 +96,7 @@ Warning: stop codon within MMP_RS07120\
 Warning: stop codon within MMP_RS08715\
 Warning: stop codon within MMP_RS09070\
 Warning: stop codon within MMP_RS08735\
-Warning: stop codon within MMP_RS08740\
+Warning: stop codon within MMP_RS08740
 
 ```bash
 module load perl/modules.centos7.5.26.1
@@ -109,9 +106,8 @@ perl DesignRandomPool.pl -pool S2_RandomPool -genes g/S2_GeneTable/genes.tab S2_
 #if script won't run because cant find DBI then run following line
 perl -MCPAN -e 'install DBI'
 ```
-DesignRandomPool.pl output
-
-Reading mapping files:\
+### DesignRandomPool.pl output
+>Reading mapping files:\
 S2_mapping\
 S2_mapping has 3,052,193 mappings, 99,909 barcodes, 49,736 non-unique barcodes\
 Read 3041567 mapped reads for 94028 distinct barcodes\
@@ -126,7 +122,6 @@ Masked 6 off-by-1 barcodes (69 reads) leaving 38173 barcodes\
 Reads for those barcodes: 2602847 of 3041567 (85.6%)\
 Chao2 estimate of #barcodes present (may be inflated for sequencing error): 594490
 
-
 Analysis for JJ 
 ```bash
 perl MapTnSeq.pl -genome JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -model model_file -first JJ_S2_R1_001.fastq.gz > JJ_mapping
@@ -135,19 +130,19 @@ Must have only bioperl/5.16.1 and perl/5.28.1 installed for this step to work so
 ```bash
 perl SetupOrg.pl -gff JJ_gff_GCA_002945325.1_ASM294532v1_genomic.gff -fna JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -name JJ_GeneTable
 ```
-SetupOrg.pl for JJ output
+### SetupOrg.pl for JJ output
 
-Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.\
+>Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.\
 Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Perl.pm line 627.\
-Warning: stop codon within MMJJ_00870
-Warning: stop codon within MMJJ_08070
-Warning: stop codon within MMJJ_09470
-Warning: stop codon within MMJJ_11320
-Warning: stop codon within MMJJ_11330
-Warning: stop codon within MMJJ_11360
-Warning: stop codon within MMJJ_11380
-Warning: stop codon within MMJJ_14570
-Warning: stop codon within MMJJ_15440
+Warning: stop codon within MMJJ_00870\
+Warning: stop codon within MMJJ_08070\
+Warning: stop codon within MMJJ_09470\
+Warning: stop codon within MMJJ_11320\
+Warning: stop codon within MMJJ_11330\
+Warning: stop codon within MMJJ_11360\
+Warning: stop codon within MMJJ_11380\
+Warning: stop codon within MMJJ_14570\
+Warning: stop codon within MMJJ_15440\
 
 ```bash
 perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
