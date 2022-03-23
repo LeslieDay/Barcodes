@@ -142,7 +142,7 @@ Warning: stop codon within MMJJ_11330\
 Warning: stop codon within MMJJ_11360\
 Warning: stop codon within MMJJ_11380\
 Warning: stop codon within MMJJ_14570\
-Warning: stop codon within MMJJ_15440\
+Warning: stop codon within MMJJ_15440
 
 ```bash
 perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
@@ -247,4 +247,27 @@ If 0.5% of reads are noise: diversity 1025.8 K from total barcodes 238.5 K seen 
 If 1.0% of reads are noise: diversity 673.7 K from total barcodes 214.0 K seen once 79.3 K seen twice 6.8 K\
 If 2.0% of reads are noise: diversity 232.3 K from total barcodes 165.1 K seen once 30.3 K seen twice 6.8 K\
 Aside from singletons and off-by-1s, see 128.3 K barcodes (96.9% of reads)\
-Barcodes with >= 130 reads each: 1.03% of codes (2.71 K), 9.60% of reads (469.9 K\
+Barcodes with >= 130 reads each: 1.03% of codes (2.71 K), 9.60% of reads (469.9 K)
+
+
+```bash
+perl combineBarSeq.pl JJ_combineOut JJ_RandomPool JJ_barcodes.codes
+perl combineBarSeq.pl S2_combineOut S2_RandomPool S2_barcodes.codes
+```
+
+Want to try organism setup with genbank so old locus tag associated with new locus tag
+Download genbank from NCBI [S2](https://www.ncbi.nlm.nih.gov/nuccore/NC_005791.1?report=genbank&log$=seqview) [JJ](https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP026606.1)
+
+Ran with perl/5.28.1 & bioperl/5.16.1
+Required additinoal scripts - make sure you change the permissions to executable for all 
+genbank2gff.pl from [gfftools repository](https://github.com/ihh/gfftools)
+[gbkToFaa.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToFaa.pl)
+[gbkToSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq.pl)
+[gbkToSeq2.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq2.pl)
+
+
+
+```bash
+perl SetupOrg.pl -gbk S2_NC_005791Sequence.gb -name S2_gbkGeneTable
+perl SetupOrg.pl -gbk JJ_NZ_CP026606Sequence.gb -name JJ_gbkGeneTable
+```
