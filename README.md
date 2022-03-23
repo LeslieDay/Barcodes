@@ -216,22 +216,40 @@ Strains per hit protein: median 21 mean 31.1\
 Gene and transposon on same strand: 50.1%\
 Reads per hit protein: median 758 mean 1220.1 bias (ratio) 1.61\
 Reads per million for hit proteins: median 176.48 mean 284.25
-
 ```bash
-gunzip -c JJ_S2_R1_001.fastq.gz >JJ_S2_R1_001.fastq
-
-perl MultiCodes.pl -out JJ_barcodes -index something -preseq GAGGTCTCT -postseq CGT -nPreExpected 0:120 < JJ_S2_R1_001.fastq
+perl MultiCodes.pl -out S2_barcodes -index S2_library -preseq GATGTCCACGAGGTCTCT -postseq CGT -nPreExpected 6 < S2_S1_R1_001.fastq
 ```
 ### output
->Reads 5924086 Multiplexed 5924086 Usable(20) 4921591 (83.1%) unique codes 263934 \
-Wrong presequence position: 1 reads (0.000%)\
-Wrote 263934 unique barcodes to JJ_barcodes.codes\
-Wrote number of barcodes seen a certain number of times to JJ_barcodes.counts; nOnce = 129141\
-Wrote 95371 off-by-1 pairs (116698 reads, fraction 0.024) to JJ_barcodes.close\
+>Reads 5296936 Multiplexed 5296936 Usable(20) 3316472 (62.6%) unique codes 131171 \
+Wrong presequence position: 139 reads (0.003%)\
+Wrote 131171 unique barcodes to S2_barcodes.codes\
+Wrote number of barcodes seen a certain number of times to S2_barcodes.counts; nOnce = 77482\
+Wrote 60938 off-by-1 pairs (90679 reads, fraction 0.027) to S2_barcodes.close\
+Wrote S2_barcodes.good\
+If 0.0% of reads are noise: diversity 1034.5 K from total barcodes 131.2 K seen once 77.5 K seen twice 3.3 K\
+If 0.5% of reads are noise: diversity 672.6 K from total barcodes 114.6 K seen once 60.9 K seen twice 3.3 K\
+If 1.0% of reads are noise: diversity 393.5 K from total barcodes 98.0 K seen once 44.3 K seen twice 3.3 K\
+If 2.0% of reads are noise: diversity 83.6 K from total barcodes 64.8 K seen once 11.2 K seen twice 3.3 K\
+Aside from singletons and off-by-1s, see 50.0 K barcodes (97.2% of reads)\
+Barcodes with >= 209 reads each: 1.01% of codes (1.33 K), 12.23% of reads (405.4 K)
+
+
+```bash
+# fastq file must be unzipped for MultiCodes to run properly
+gunzip -c JJ_S2_R1_001.fastq.gz >JJ_S2_R1_001.fastq
+
+perl MultiCodes.pl -out JJ_barcodes -index JJ_library -preseq GATGTCCACGAGGTCTCT -postseq CGT -nPreExpected 6 < JJ_S2_R1_001.fastq
+```
+### output
+Reads 5924086 Multiplexed 5924086 Usable(20) 4895594 (82.6%) unique codes 262975\
+Wrong presequence position: 166 reads (0.003%)\
+Wrote 262975 unique barcodes to JJ_barcodes.codes\
+Wrote number of barcodes seen a certain number of times to JJ_barcodes.counts; nOnce = 128237\
+Wrote 94791 off-by-1 pairs (115988 reads, fraction 0.024) to JJ_barcodes.close\
 Wrote JJ_barcodes.good\
-If 0.0% of reads are noise: diversity 1483.8 K from total barcodes 263.9 K seen once 129.1 K seen twice 6.8 K\
-If 0.5% of reads are noise: diversity 1038.6 K from total barcodes 239.3 K seen once 104.5 K seen twice 6.8 K\
-If 1.0% of reads are noise: diversity 682.0 K from total barcodes 214.7 K seen once 79.9 K seen twice 6.8 K\
-If 2.0% of reads are noise: diversity 234.5 K from total barcodes 165.5 K seen once 30.7 K seen twice 6.8 K\
+If 0.0% of reads are noise: diversity 1465.6 K from total barcodes 263.0 K seen once 128.2 K seen twice 6.8 K\
+If 0.5% of reads are noise: diversity 1025.8 K from total barcodes 238.5 K seen once 103.8 K seen twice 6.8 K\
+If 1.0% of reads are noise: diversity 673.7 K from total barcodes 214.0 K seen once 79.3 K seen twice 6.8 K\
+If 2.0% of reads are noise: diversity 232.3 K from total barcodes 165.1 K seen once 30.3 K seen twice 6.8 K\
 Aside from singletons and off-by-1s, see 128.3 K barcodes (96.9% of reads)\
-Barcodes with >= 131 reads each: 1.02% of codes (2.68 K), 9.53% of reads (468.9 K)
+Barcodes with >= 130 reads each: 1.03% of codes (2.71 K), 9.60% of reads (469.9 K\
