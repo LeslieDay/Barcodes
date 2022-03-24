@@ -161,7 +161,7 @@ Proportions: Long-enough 1.000 Barcode 0.829 Attempted 0.789 Mapped 0.723 Past-e
 module load perl/modules.centos7.5.26.1
 perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
 ```
-### output
+### JJ DesignRandomPool.pl output
 >Reading mapping files:\
 JJ_mapping\
 JJ_mapping has 4,292,376 mappings, 202,668 barcodes, 121,633 non-unique barcodes\
@@ -180,9 +180,9 @@ Chao2 estimate of #barcodes present (may be inflated for sequencing error): 7791
 Run R Script analysis on JJ and S2 DesignRandomPool output
 ```bash
 module load R
-Rscript PoolStats.R S2_RandomPool g/S2_GeneTable/genes.tab 3052193
+Rscript PoolStats.R S2_RandomPool g/S2_GeneTable/genes.tab 3041567
 ```
-### output 
+### S2 PoolStats.R output 
 >38173 insertions in genome are at 28673 different locations\
 Found 21259 insertions (16573 distinct locations) in central 10-90% of genes\
 Found central insertions for 1615 of 1741 protein-coding genes\
@@ -193,13 +193,13 @@ Wrote read and strain counts for hit genes to S2_RandomPool.hit\
 Strains per hit protein: median 8 mean 13.1\
 Gene and transposon on same strand: 50.9%\
 Reads per hit protein: median 451 mean 865.1 bias (ratio) 1.92\
-Reads per million for hit proteins: median 147.76 mean 283.44
+Reads per million for hit proteins: median 148.28 mean 284.43
 
 ```bash
-Rscript PoolStats.R JJ_RandomPool g/JJ_GeneTable/genes.tab 4292376
+Rscript PoolStats.R JJ_RandomPool g/JJ_GeneTable/genes.tab 4277927
 ```
 
-### output 
+### JJ PoolStats.R output 
 >81364 insertions in genome are at 50130 different locations\
 Found 47387 insertions (30575 distinct locations) in central 10-90% of genes\
 Found central insertions for 1522 of 1815 protein-coding genes\
@@ -210,7 +210,7 @@ Wrote read and strain counts for hit genes to JJ_RandomPool.hit\
 Strains per hit protein: median 21 mean 31.1\
 Gene and transposon on same strand: 50.1%\
 Reads per hit protein: median 758 mean 1220.1 bias (ratio) 1.61\
-Reads per million for hit proteins: median 176.48 mean 284.25
+Reads per million for hit proteins: median 177.07 mean 285.21
 ```bash
 perl MultiCodes.pl -out S2_barcodes -index S2_library -preseq GATGTCCACGAGGTCTCT -postseq CGT -nPreExpected 6 < S2_S1_R1_001.fastq
 ```
@@ -254,20 +254,63 @@ Barcodes with >= 130 reads each: 1.03% of codes (2.71 K), 9.60% of reads (469.9 
 perl combineBarSeq.pl JJ_combineOut JJ_RandomPool JJ_barcodes.codes
 perl combineBarSeq.pl S2_combineOut S2_RandomPool S2_barcodes.codes
 ```
+Doesn't seem to be combining properly - no counts tallied
 
 Want to try organism setup with genbank so old locus tag associated with new locus tag
 Download genbank from NCBI [S2](https://www.ncbi.nlm.nih.gov/nuccore/NC_005791.1?report=genbank&log$=seqview) [JJ](https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP026606.1)
 
 Ran with perl/5.28.1 & bioperl/5.16.1
-Required additinoal scripts - make sure you change the permissions to executable for all 
+
+Required additinal scripts - make sure you change the permissions to executable for all 
+
 genbank2gff.pl from [gfftools repository](https://github.com/ihh/gfftools)
+
 [gbkToFaa.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToFaa.pl)
+
 [gbkToSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq.pl)
+
 [gbkToSeq2.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq2.pl)
+
 
 
 
 ```bash
 perl SetupOrg.pl -gbk S2_NC_005791Sequence.gb -name S2_gbkGeneTable
+```
+### S2 Setup.Org.pl genbank output
+>No gene entry for locustag:begin MMP_RS01965:364357 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMP_RS06065:1158991 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMP_RS09050:1409461 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMP_RS07600:1438364 (OK if wrap-around ORF or pseudo)\
+Wrote a.a. sequences for 1745 genes
+
+```bash
 perl SetupOrg.pl -gbk JJ_NZ_CP026606Sequence.gb -name JJ_gbkGeneTable
 ```
+### JJ Setup.Org.pl genbank output
+>No gene entry for locustag:begin MMJJ_RS00005:1 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS00955:184818 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS00975:188094 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS00985:190530 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS00990:191011 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS01745:338240 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS09385:365218 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS02315:437066 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS02485:470137 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS02765:520522 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS02865:540484 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS04070:756048 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS04220:785692 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS04330:808909 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS04350:811659 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS07325:1342635 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS08415:1548366 (OK if wrap-around ORF or pseudo)\
+No gene entry for locustag:begin MMJJ_RS08745:1610863 (OK if wrap-around ORF or pseudo)\
+Wrote a.a. sequences for 1814 genes
+```bash
+module load perl/modules.centos7.5.26.1
+perl DesignRandomPool.pl -pool JJ_RandomPoolgbk -genes g/JJ_gbkGeneTable/genes.tab JJ_mapping
+```
+perl combineBarSeq.pl JJ_combineOut JJ_RandomPool JJ_barcodes.codes
+
+Rscript PoolStats.R JJ_RandomPoolgbk g/JJ_gbkGeneTable/genes.tab 4277927
