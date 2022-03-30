@@ -261,9 +261,9 @@ Download genbank from NCBI [S2](https://www.ncbi.nlm.nih.gov/nuccore/NC_005791.1
 
 Ran with perl/5.28.1 & bioperl/5.16.1
 
-Required additinal scripts - make sure you change the permissions to executable for all 
+Required additional scripts - make sure you change the permissions to executable for all 
 
-genbank2gff.pl from [gfftools repository](https://github.com/ihh/gfftools)
+From gfftools repository [genbank2gff.pl](https://github.com/ihh/gfftools/blob/master/genbank2gff.pl)
 
 [gbkToFaa.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToFaa.pl)
 
@@ -314,3 +314,75 @@ perl DesignRandomPool.pl -pool JJ_RandomPoolgbk -genes g/JJ_gbkGeneTable/genes.t
 perl combineBarSeq.pl JJ_combineOut JJ_RandomPool JJ_barcodes.codes
 
 Rscript PoolStats.R JJ_RandomPoolgbk g/JJ_gbkGeneTable/genes.tab 4277927
+
+# Order to run scripts for analysis
+### 1-4 Required for initial transposon library mapping
+### 5-6 Required for BarSeq analysis 
+1. MapTnSeq.pl
+2. SetupOrg.pl
+3. DesignRandomPool.pl 
+4. PoolStats.R
+6. MultiCodes.pl
+7. combineBarSeq.pl
+
+# Required Modules
+module load blat
+module load R
+module load bioperl
+
+# Required scripts 
+## All scripts must be located in working directory & be sure file permissions are executable (--rxw)
+## [RB-TnSeq Scripts](https://bitbucket.org/berkeleylab/feba/src/master/)
+- [MapTnSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/MapTnSeq.pl)
+- [SetupOrg.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/SetupOrg.pl)
+- [Edited -DesignRandomPool.pl](https://github.com/LeslieDay/Barcodes/blob/main/DesignRandomPool.pl) 
+--Removed line to automatically execute PoolStats.R 
+-- Edited version of script without invoke PoolStats.R in Barcodes repository [Edited -DesignRandomPool.pl](https://github.com/LeslieDay/Barcodes/blob/main/DesignRandomPool.pl)
+-- Original version of script [DesignRandomPool.pl]
+
+- [gbkToFaa.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToFaa.pl)
+
+- [gbkToSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq.pl)
+
+- [gbkToSeq2.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq2.pl)
+
+### From gfftools repository 
+[genbank2gff.pl](https://github.com/ihh/gfftools/blob/master/genbank2gff.pl)
+
+- DesignRandomPool.pl # Removed line to automatically execute PoolStats.R 
+-- Edited version of script without invoke PoolStats.R in Barcodes repository [Edited -DesignRandomPool.pl](https://github.com/LeslieDay/Barcodes/blob/main/DesignRandomPool.pl)
+-- Original version of script [DesignRandomPool.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/DesignRandomPool.pl)
+- PoolStats.R # Manually run providing DesignRandomPool.pl stat of $nMapped from output "Read $nMapped mapped reads for..."
+- MultiCodes.pl
+- combineBarSeq.pl 
+
+## Upload model file specific to our plasmid 
+### line 1 = nnnnnnn (expect 6bp index) 20N (20 nucleotide barcode) followed by sequence to end of inverted repeat
+### line 2 = plasmid backbone following inverted repeat, used to remove plasmid contamination sequences
+
+- [model_file.txt](https://github.com/LeslieDay/Barcodes/files/8318817/model_file.txt)
+nnnnnnGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACGTGTCAGACCGGGGACTTATCAGCCAACCTGT
+ATATCCATCACACTGGGCCGCTCGAGCATGC
+
+[MapTnSeq.pl script source](https://bitbucket.org/berkeleylab/feba/src/master/bin/MapTnSeq.pl)
+
+[S2 Genome files](https://www.ncbi.nlm.nih.gov/datasets/genomes/?taxon=267377&utm_source=data-hub)
+
+# ------------- S2 Tn Library mapping -------------
+## 1. MapTnSeq.pl
+```bash
+# login to MSI and enter directory with sequencing data and scripts 
+# my working directory = /home/barcodedTnLibrary
+cd barcodedTnLibrary
+# request interactive node time on MSI 
+srun -N 1 --ntasks-per-node=4 --mem-per-cpu=12gb -t 4:00:00 -p interactive --pty bash
+module load perl/5.28.1
+module load blat 
+module load bioperl/5.16.1
+# Load required packages
+# Run MapTnSeq.pl 
+# Generates tab-delimited file with fields read,barcode,scaffold,pos,strand,uniq,qBeg,qEnd,score,identity where qBeg and qEnd are the positions in the read, after the transposon sequence is removed, that match the genome.
+
+perl MapTnSeq.pl -genome S2_GCF_000011585.1_ASM1158v1_genomic.fna -model model_file -first S2_S1_R1_001.fastq.gz > S2_mapping
+```
+
