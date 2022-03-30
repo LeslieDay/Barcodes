@@ -1,4 +1,91 @@
 
+# Order to run scripts for analysis
+### 1-4 Required for initial transposon library mapping
+### 5-6 Required for BarSeq analysis 
+1. MapTnSeq.pl
+2. SetupOrg.pl
+3. DesignRandomPool.pl 
+4. PoolStats.R
+6. MultiCodes.pl
+7. combineBarSeq.pl
+
+# Required Modules
+module load blat
+module load R
+module load bioperl
+
+# Required scripts 
+## All scripts must be located in working directory & be sure file permissions are executable (--rxw)
+## [RB-TnSeq Scripts](https://bitbucket.org/berkeleylab/feba/src/master/)
+- [MapTnSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/MapTnSeq.pl)
+- [SetupOrg.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/SetupOrg.pl)
+- [Edited -DesignRandomPool.pl](https://github.com/LeslieDay/Barcodes/blob/main/DesignRandomPool.pl) 
+-- Removed line to automatically execute PoolStats.R 
+-- Original version of script [DesignRandomPool.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/DesignRandomPool.pl)
+- [PoolStats.R](https://bitbucket.org/berkeleylab/feba/src/master/lib/PoolStats.R)
+-- To manually run if using edited DesignRandomPool.pl script provide DesignRandomPool.pl stat of $nMapped from output "Read $nMapped mapped reads for..."
+- [MultiCodes.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/MultiCodes.pl)
+- [combineBarSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/combineBarSeq.pl)
+
+## Scripts dependencies of above scripts i.e. must be present in directory and executable for main scripts to run
+- [gbkToFaa.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToFaa.pl)
+- [gbkToSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq.pl)
+- [gbkToSeq2.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq2.pl)
+
+### From gfftools repository 
+[genbank2gff.pl](https://github.com/ihh/gfftools/blob/master/genbank2gff.pl)
+ 
+
+## Upload model file specific to our plasmid 
+### line 1 = nnnnnnn (expect 6bp index) 20N (20 nucleotide barcode) followed by sequence to end of inverted repeat
+### line 2 = plasmid backbone following inverted repeat, used to remove plasmid contamination sequences
+
+- [model_file.txt](https://github.com/LeslieDay/Barcodes/files/8318817/model_file.txt)
+nnnnnnGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACGTGTCAGACCGGGGACTTATCAGCCAACCTGT
+ATATCCATCACACTGGGCCGCTCGAGCATGC
+
+[S2 Genome files](https://www.ncbi.nlm.nih.gov/datasets/genomes/?taxon=267377&utm_source=data-hub)
+
+# ------------- S2 Tn Library mapping -------------
+## 1. MapTnSeq.pl
+```bash
+# login to MSI and enter directory with sequencing data and scripts 
+# my working directory = /home/barcodedTnLibrary
+cd barcodedTnLibrary
+# request interactive node time on MSI 
+srun -N 1 --ntasks-per-node=4 --mem-per-cpu=12gb -t 4:00:00 -p interactive --pty bash
+module load perl/5.28.1
+module load blat 
+module load bioperl/5.16.1
+# Load required packages
+# Run MapTnSeq.pl 
+# Generates tab-delimited file with fields read,barcode,scaffold,pos,strand,uniq,qBeg,qEnd,score,identity where qBeg and qEnd are the positions in the read, after the transposon sequence is removed, that match the genome.
+
+perl MapTnSeq.pl -genome S2_GCF_000011585.1_ASM1158v1_genomic.fna -model model_file -first S2_S1_R1_001.fastq.gz > S2_mapping
+
+# Run SetupOrg.pl
+# create directory /g for saving genome info 
+mkdir g
+perl SetupOrg.pl -gff S2_GCF000011585.1genomic.gff -fna S2_GCF_000011585.1_ASM1158v1_genomic.fna -name S2_GeneTable
+
+module load perl/modules.centos7.5.26.1
+
+perl DesignRandomPool.pl -pool S2_RandomPool -genes g/S2_GeneTable/genes.tab S2_mapping
+
+#if script won't run because cant find DBI then run following line
+perl -MCPAN -e 'install DBI'
+
+# Run R Script analysis on S2 DesignRandomPool output
+```bash
+module load R
+Rscript PoolStats.R S2_RandomPool g/S2_GeneTable/genes.tab 3041567
+
+# Unzip sequencing files for MultiCodes.pl analysis
+gunzip -c S2_S1_R1_001.fastq.gz >S2_S1_R1_001.fastq
+#Analyze reads with MultiCodes.pl
+perl MultiCodes.pl -out S2_barcodes -index S2_library -preseq GATGTCCACGAGGTCTCT -postseq CGT -nPreExpected 6 < S2_S1_R1_001.fastq
+
+```
 # ------------- S2 Tn Library mapping commands -------------
 # -------------& corresponding output -------------
 ```
