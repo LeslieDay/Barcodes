@@ -76,7 +76,6 @@ perl DesignRandomPool.pl -pool S2_RandomPool -genes g/S2_GeneTable/genes.tab S2_
 perl -MCPAN -e 'install DBI'
 
 # Run R Script analysis on S2 DesignRandomPool output
-```bash
 module load R
 Rscript PoolStats.R S2_RandomPool g/S2_GeneTable/genes.tab 3041567
 
@@ -87,7 +86,7 @@ perl MultiCodes.pl -out S2_barcodes -index S2_library -preseq GATGTCCACGAGGTCTCT
 
 ```
 # ------------- S2 Tn Library mapping commands -------------
-# -------------& corresponding output -------------
+#    ------------- & corresponding output -------------
 ```
 perl MapTnSeq.pl -genome S2_GCF_000011585.1_ASM1158v1_genomic.fna -model model_file -first S2_S1_R1_001.fastq.gz > S2_mapping
 ```
@@ -185,3 +184,96 @@ If 1.0% of reads are noise: diversity 393.5 K from total barcodes 98.0 K seen on
 If 2.0% of reads are noise: diversity 83.6 K from total barcodes 64.8 K seen once 11.2 K seen twice 3.3 K\
 Aside from singletons and off-by-1s, see 50.0 K barcodes (97.2% of reads)\
 Barcodes with >= 209 reads each: 1.01% of codes (1.33 K), 12.23% of reads (405.4 K)
+
+# ------------- JJ Tn Library mapping -------------
+```bash
+perl MapTnSeq.pl -genome JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -model model_file -first JJ_S2_R1_001.fastq.gz > JJ_mapping
+
+# Must have only bioperl/5.16.1 and perl/5.28.1 installed for this step to work so may have to uninstall and reinstall perl/modules.centos7.5.26.1
+perl SetupOrg.pl -gff JJ_gff_GCA_002945325.1_ASM294532v1_genomic.gff -fna JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -name JJ_GeneTable
+
+module load perl/modules.centos7.5.26.1
+perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
+
+Rscript PoolStats.R JJ_RandomPool g/JJ_GeneTable/genes.tab 4277927
+
+# fastq file must be unzipped for MultiCodes to run properly
+gunzip -c JJ_S2_R1_001.fastq.gz >JJ_S2_R1_001.fastq
+
+perl MultiCodes.pl -out JJ_barcodes -index JJ_library -preseq GATGTCCACGAGGTCTCT -postseq CGT -nPreExpected 6 < JJ_S2_R1_001.fastq
+```
+# ------------- JJ Tn Library mapping commands -------------
+#    ------------- & corresponding output -------------
+
+```bash
+perl MapTnSeq.pl -genome JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -model model_file -first JJ_S2_R1_001.fastq.gz > JJ_mapping
+perl SetupOrg.pl -gff JJ_gff_GCA_002945325.1_ASM294532v1_genomic.gff -fna JJ_fna_GCA_002945325.1_ASM294532v1_genomic.fna -name JJ_GeneTable
+```
+### SetupOrg.pl for JJ output
+
+>Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Range.pm line 251.\
+Replacement list is longer than search list at /soft/bioperl/5.16.1/lib/site_perl/5.16.1/Bio/Perl.pm line 627.\
+Warning: stop codon within MMJJ_00870\
+Warning: stop codon within MMJJ_08070\
+Warning: stop codon within MMJJ_09470\
+Warning: stop codon within MMJJ_11320\
+Warning: stop codon within MMJJ_11330\
+Warning: stop codon within MMJJ_11360\
+Warning: stop codon within MMJJ_11380\
+Warning: stop codon within MMJJ_14570\
+Warning: stop codon within MMJJ_15440
+
+```bash
+perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
+```
+### JJ DesignRandomPool.pl output
+>Reading mapping files:\
+JJ_mapping\
+JJ_mapping has 4,292,376 mappings, 202,668 barcodes, 121,633 non-unique barcodes\
+Read 4277927 mapped reads for 197929 distinct barcodes\
+(Skipped 14449 reads with qBeg > 3)\
+94143 barcodes seen 10 or more times, map 81382 (minFrac 0.75 minRatio 8)\
+FewGood	1146	0.0122\
+LoRatio	3324	0.0353\
+NoCons	8283	0.0880\
+PastEnd	8	0.0001\
+Usable	81382	0.8645\
+Masked 18 off-by-1 barcodes (221 reads) leaving 81364 barcodes\
+Reads for those barcodes: 3218100 of 4277927 (75.2%)\
+Chao2 estimate of #barcodes present (may be inflated for sequencing error): 779112
+
+
+```bash
+Rscript PoolStats.R JJ_RandomPool g/JJ_GeneTable/genes.tab 4277927
+```
+
+### JJ PoolStats.R output 
+>81364 insertions in genome are at 50130 different locations\
+Found 47387 insertions (30575 distinct locations) in central 10-90% of genes\
+Found central insertions for 1522 of 1815 protein-coding genes\
+Hit rate in (crude) likely essentials: 0.31 other 0.84\
+Wrote proteins of 300nt or more with no good insertions to JJ_RandomPool.unhit\
+Wrote 22 genes with surprising insertions in central 10-90% to JJ_RandomPool.surprise\
+Wrote read and strain counts for hit genes to JJ_RandomPool.hit\
+Strains per hit protein: median 21 mean 31.1\
+Gene and transposon on same strand: 50.1%\
+Reads per hit protein: median 758 mean 1220.1 bias (ratio) 1.61\
+Reads per million for hit proteins: median 177.07 mean 285.21
+
+
+```bash
+perl MultiCodes.pl -out JJ_barcodes -index JJ_library -preseq GATGTCCACGAGGTCTCT -postseq CGT -nPreExpected 6 < JJ_S2_R1_001.fastq
+```
+### MultiCodes.pl JJ Output
+Reads 5924086 Multiplexed 5924086 Usable(20) 4895594 (82.6%) unique codes 262975\
+Wrong presequence position: 166 reads (0.003%)\
+Wrote 262975 unique barcodes to JJ_barcodes.codes\
+Wrote number of barcodes seen a certain number of times to JJ_barcodes.counts; nOnce = 128237\
+Wrote 94791 off-by-1 pairs (115988 reads, fraction 0.024) to JJ_barcodes.close\
+Wrote JJ_barcodes.good\
+If 0.0% of reads are noise: diversity 1465.6 K from total barcodes 263.0 K seen once 128.2 K seen twice 6.8 K\
+If 0.5% of reads are noise: diversity 1025.8 K from total barcodes 238.5 K seen once 103.8 K seen twice 6.8 K\
+If 1.0% of reads are noise: diversity 673.7 K from total barcodes 214.0 K seen once 79.3 K seen twice 6.8 K\
+If 2.0% of reads are noise: diversity 232.3 K from total barcodes 165.1 K seen once 30.3 K seen twice 6.8 K\
+Aside from singletons and off-by-1s, see 128.3 K barcodes (96.9% of reads)\
+Barcodes with >= 130 reads each: 1.03% of codes (2.71 K), 9.60% of reads (469.9 K)
