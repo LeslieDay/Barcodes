@@ -7,7 +7,7 @@
 use strict;
 use Getopt::Long;
 use FindBin qw($Bin);
-use lib "$Bin/home/kcosta/day00094/barcode_ratios";
+use lib "$Bin/../lib";
 use FEBA_Utils qw{reverseComplement};
 use Utils qw{commify};
 sub Variants($); # return all 1-nt variants for a sequence
@@ -236,6 +236,7 @@ END
                          $nReadsForUsable, $nMapped, 100*$nReadsForUsable/($nMapped + 1e-6));
     my $chao = int($totcodes + $f1**2/(2*$f2 + 1));
     print STDERR "Chao2 estimate of #barcodes present (may be inflated for sequencing error): $chao\n";
+    system("Rscript", "PoolStats.R", $poolfile, $genesfile, $nMapped) == 0 || die $!;
 }
 
 sub Variants($) {
@@ -261,3 +262,4 @@ sub uniq(@) {
     foreach my $value (@_) { $seen{$value} = 1; }
     return keys(%seen);
 }
+
