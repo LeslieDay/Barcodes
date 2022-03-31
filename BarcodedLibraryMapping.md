@@ -1,13 +1,12 @@
 
 # Order to run scripts for analysis
-### 1-4 Required for initial transposon library mapping
-### 5-6 Required for BarSeq analysis 
+### 1-3 Required for initial transposon library mapping
+### 4-5 Required for BarSeq analysis 
 1. MapTnSeq.pl
 2. SetupOrg.pl
 3. DesignRandomPool.pl 
-4. PoolStats.R
-6. MultiCodes.pl
-7. combineBarSeq.pl
+4. MultiCodes.pl
+5. combineBarSeq.pl
 
 # Required Modules
 module load blat
@@ -20,14 +19,14 @@ module load bioperl
 - [MapTnSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/MapTnSeq.pl)
 - [SetupOrg.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/SetupOrg.pl)
 - [Edited -DesignRandomPool.pl](https://github.com/LeslieDay/Barcodes/blob/main/DesignRandomPool.pl) 
--- Removed line to automatically execute PoolStats.R 
+-- Edited line to allow to automatically execute PoolStats.R 
 -- Original version of script [DesignRandomPool.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/DesignRandomPool.pl)
-- [PoolStats.R](https://bitbucket.org/berkeleylab/feba/src/master/lib/PoolStats.R)
 -- To manually run if using edited DesignRandomPool.pl script provide DesignRandomPool.pl stat of $nMapped from output "Read $nMapped mapped reads for..."
 - [MultiCodes.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/MultiCodes.pl)
 - [combineBarSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/combineBarSeq.pl)
 
 ## Scripts dependencies of above scripts i.e. must be present in directory and executable for main scripts to run
+- [PoolStats.R](https://bitbucket.org/berkeleylab/feba/src/master/lib/PoolStats.R)
 - [gbkToFaa.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToFaa.pl)
 - [gbkToSeq.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq.pl)
 - [gbkToSeq2.pl](https://bitbucket.org/berkeleylab/feba/src/master/bin/gbkToSeq2.pl)
@@ -242,7 +241,7 @@ Warning: stop codon within MMJJ_14570\
 Warning: stop codon within MMJJ_15440
 
 ```bash
-perl DesignRandomPool.pl -pool JJ_RandomPool -genes g/JJ_GeneTable/genes.tab JJ_mapping
+perl DesignRandomPool.pl -pool JJ_RandomPoolOriginal -genes g/JJ_GeneTable/genes.tab JJ_mapping
 ```
 ### JJ DesignRandomPool.pl output
 >Reading mapping files:\
@@ -258,21 +257,14 @@ PastEnd	8	0.0001\
 Usable	81382	0.8645\
 Masked 18 off-by-1 barcodes (221 reads) leaving 81364 barcodes\
 Reads for those barcodes: 3218100 of 4277927 (75.2%)\
-Chao2 estimate of #barcodes present (may be inflated for sequencing error): 779112
-
-
-```bash
-Rscript PoolStats.R JJ_RandomPool g/JJ_GeneTable/genes.tab 4277927
-```
-
-### JJ PoolStats.R output 
->81364 insertions in genome are at 50130 different locations\
+Chao2 estimate of #barcodes present (may be inflated for sequencing error): 779112\
+81364 insertions in genome are at 50130 different locations\
 Found 47387 insertions (30575 distinct locations) in central 10-90% of genes\
 Found central insertions for 1522 of 1815 protein-coding genes\
 Hit rate in (crude) likely essentials: 0.31 other 0.84\
-Wrote proteins of 300nt or more with no good insertions to JJ_RandomPool.unhit\
-Wrote 22 genes with surprising insertions in central 10-90% to JJ_RandomPool.surprise\
-Wrote read and strain counts for hit genes to JJ_RandomPool.hit\
+Wrote proteins of 300nt or more with no good insertions to JJ_RandomPoolOriginal.unhit\
+Wrote 22 genes with surprising insertions in central 10-90% to JJ_RandomPoolOriginal.surprise\
+Wrote read and strain counts for hit genes to JJ_RandomPoolOriginal.hit\
 Strains per hit protein: median 21 mean 31.1\
 Gene and transposon on same strand: 50.1%\
 Reads per hit protein: median 758 mean 1220.1 bias (ratio) 1.61\
