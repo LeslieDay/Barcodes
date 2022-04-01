@@ -287,3 +287,27 @@ If 1.0% of reads are noise: diversity 673.7 K from total barcodes 214.0 K seen o
 If 2.0% of reads are noise: diversity 232.3 K from total barcodes 165.1 K seen once 30.3 K seen twice 6.8 K\
 Aside from singletons and off-by-1s, see 128.3 K barcodes (96.9% of reads)\
 Barcodes with >= 130 reads each: 1.03% of codes (2.71 K), 9.60% of reads (469.9 K)
+
+# ------------- Extra JJ analysis with outputs -------------
+# ------------- Attempting to optimize mapping -------------
+# DesignRandomPool.pl with minimum mapping number = 2 
+# default is a minimum of ten sequences mapped in order to count barcode 
+perl DesignRandomPool.pl -pool JJ_RandomPool_minN2 -genes g/S2_GeneTable/genes.tab JJ_mapping -minN 2
+
+# DesignRandomPool output 2 read minimum 
+>Reading mapping files:\
+JJ_mapping\
+JJ_mapping has 4,292,376 mappings, 202,668 barcodes, 121,633 non-unique barcodes\
+Read 4277927 mapped reads for 197929 distinct barcodes\
+(Skipped 14449 reads with qBeg > 3)\
+120083 barcodes seen 2 or more times, map 106408 (minFrac 0.75 minRatio 8)\
+FewGood	1435	0.0120\
+LoRatio	3559	0.0296\
+NoCons	8652	0.0721\
+PastEnd	29	0.0002\
+Usable	106408	0.8861\
+Masked 3661 off-by-1 barcodes (11443 reads) leaving 102755 barcodes\
+Reads for those barcodes: 3342288 of 4277927 (78.1%)\
+Chao2 estimate of #barcodes present (may be inflated for sequencing error): 779112
+
+
