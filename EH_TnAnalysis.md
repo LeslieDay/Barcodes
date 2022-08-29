@@ -46,3 +46,4 @@ This is the code to combine the amplicon barcode files with the random pool libr
 ```
 perl combineBarSeq.pl JJ_combineOut JJ_RandomPool EHH023_barcodes.codes EHH021_barcodes.codes
 ```
+perl BarSeqR.pl -org JJ_GeneTable -indir g/JJ_GeneTable -metadir metadata CombinePool -genes g/JJ_GeneTable/genes.GC -outdir g/JJ_GeneTable/html/JJ -pool CombinePool.poolcount
